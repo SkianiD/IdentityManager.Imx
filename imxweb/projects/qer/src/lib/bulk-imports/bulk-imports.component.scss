@@ -1,0 +1,60 @@
+
+@import '~@elemental-ui/core/src/styles/_palette.scss';
+
+.table-container {
+    display: flex;
+    flex-direction: column; 
+    max-height: 400px; 
+    overflow-y: auto; 
+    padding-top: 50px;
+  }
+
+.csv-table {
+    width: 100%;
+    border-collapse: collapse;
+    flex-grow: 1; 
+    table-layout: fixed; 
+  
+    
+    td, th {
+      width: 100px;
+      font-size: 14px; 
+      text-align: left; 
+      padding: 10px; 
+    }
+  }
+
+.pointer-cursor {
+    cursor: pointer;
+  }
+
+h2 {
+    align-self: center;
+    margin-top: 20px;
+  }
+  
+#dropZone {
+    padding: 20px;
+    text-align: center;
+  }
+  
+#dropZone.dragover {
+    background-color: #f0f0f0; 
+  }
+
+.imx-no-data {
+    text-align: center;
+    margin: 20px 0;
+  
+    .eui-icon {
+      font-size: 100px;
+      color: rgba($black-c, 0.55);
+    }
+  
+    p {
+      margin: 0;
+      font-size: 18px;
+      color: $black-9;
+    }
+  }
+

@@ -156,3 +156,4 @@ export { FeatureConfigService } from './lib/admin/feature-config.service';
 export { ItshopRequest } from './lib/request-history/itshop-request';
 export { RequestParameterDataEntity } from './lib/itshop/request-info/request-parameter-data-entity.interface';
 export { BaseTreeRoleRestoreHandler } from './lib/role-management/restore/restore-handler';
+export { BulkImportsTileComponent } from './lib/bulk-imports/bulk-imports-tile/bulk-imports-tile.component';

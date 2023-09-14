@@ -1,0 +1,26 @@
+<h1 class="mat-headline" translate>#LDS#Heading Bulk Imports</h1>
+
+<div *ngIf="csvData.length === 0" id="dropZone" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+  <label for="csvFileInput">
+      <h2 class="pointer-cursor">Click here or drag and drop a CSV file</h2>
+  </label>
+  <input type="file" id="csvFileInput" (change)="onFileSelected($event)" style="display: none;" accept=".csv">
+</div>
+
+  
+<div class="table-container">
+    <mat-table *ngIf="csvData.length > 0" class="csv-table" [dataSource]="displayedData">
+      <ng-container *ngFor="let header of headers" [matColumnDef]="header">
+        <mat-header-cell *matHeaderCellDef>{{ header }}</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row[header] }}</mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="headers"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: headers"></mat-row>
+    </mat-table>
+    <div *ngIf="csvData.length === 0" class="imx-no-data">
+        <eui-icon icon="table"></eui-icon>
+        <p>{{ '#LDS#No data' | translate }}</p>
+    </div>
+    <mat-paginator *ngIf="csvData.length > 0" [pageSize]="itemsPerPage" [pageSizeOptions]="[20, 50, 100]" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
+</div>

@@ -1,0 +1,10 @@
+<imx-icon-tile [caption]="'#LDS#Bulk Imports' | translate"
+  [subtitle]="'#LDS#Make bulk imports to the database.' | translate"
+  [image]="'database'">
+  <ng-template #ActionTemplate>
+    <button mat-button color="primary" (click)="goToBulkImports()">
+      <span>{{'#LDS#IMPORT A CSV FILE'| translate}}</span>
+      <eui-icon size="m" icon="forward"></eui-icon>
+    </button>
+  </ng-template>
+</imx-icon-tile>
