@@ -72,12 +72,12 @@ readCSV(file: File) {
   reader.onload = () => {
     const csvData = reader.result as string;
     const rows = csvData.trim().split('\n');
-    this.headers = rows[0].split(',').map(header => header.trim());
-    this.csvData = rows.slice(1).map(row => {
+    this.headers = ['Index', ...rows[0].split(',').map(header => header.trim())];
+    this.csvData = rows.slice(1).map((row, index) => {
       const data = row.split(',').map(value => value.trim());
-      const rowData: any = {};
-      for (let i = 0; i < this.headers.length; i++) {
-        rowData[this.headers[i]] = data[i];
+      const rowData: any = { 'Index': index + 1 };
+      for (let i = 0; i < this.headers.length - 1; i++) {
+        rowData[this.headers[i + 1]] = data[i];
       }
       return rowData;
     });
