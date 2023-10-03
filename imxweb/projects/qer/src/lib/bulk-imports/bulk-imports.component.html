@@ -1,5 +1,46 @@
 <h1>{{ '#LDS#Bulk Actions' | translate }}</h1>
 
+
+<div class="search-container">
+  <mat-form-field class="search-input" appearance="outline" >
+      <eui-icon icon="search" class="search-icon"></eui-icon>
+ 
+    <input matInput [(ngModel)]="searchText" (keyup)="applyFilter()" class="search-text">
+
+  </mat-form-field> 
+
+  <mat-form-field class="dropdown-menu" appearance="outline" >
+      <mat-label>Select an option</mat-label>
+      <div>
+        <mat-select>
+          <mat-option value="business_roles">Business Roles</mat-option>
+          <mat-option value="identities">Identities</mat-option>
+        </mat-select>
+    </div>
+  </mat-form-field>
+
+</div>
+
+
+
+
+<div class="button-container">
+  <div class="button-bar">
+    <button
+        mat-raised-button
+        color="primary" (click)="onValidateClicked(selectedOptionKey)"
+      >
+      <!--[disabled]="!fileLoaded || selectedOptionKey === null"
+      (click)="onValidateClicked(selectedOptionKey)"-->
+        Validate
+    </button>
+  </div>
+
+  <mat-progress-bar *ngIf="showProgressBar" mode="determinate" [value]="progressValue"></mat-progress-bar>
+</div>
+
+
+
 <div class="imx-main-container">
   <div *ngIf="csvData.length === 0" id="dropZone" (dragover)="onDragOver($event)" (drop)="onDrop($event)" class="imx-no-data">
       <eui-icon icon="table"></eui-icon>

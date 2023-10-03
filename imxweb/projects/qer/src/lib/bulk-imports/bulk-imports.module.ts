@@ -13,6 +13,8 @@ import { EuiCoreModule } from '@elemental-ui/core';
 import { EuiMaterialModule } from '@elemental-ui/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { MatTableModule } from '@angular/material/table';
     EuiCoreModule,
     EuiMaterialModule, 
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    FormsModule,
+    MatProgressBarModule
   ],
   providers: [
     BulkImportsService

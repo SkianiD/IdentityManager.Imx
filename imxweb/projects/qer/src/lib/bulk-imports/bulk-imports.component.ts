@@ -5,6 +5,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
 
+
+export interface DialogText {
+  message: string;
+}
+
+
 @Component({
   selector: 'ccc-bulk-imports',
   templateUrl: './bulk-imports.component.html',
@@ -16,17 +22,23 @@ export class BulkImportsComponent implements OnInit {
   headers: string[] = [];
   csvData: any[] = [];
   displayedData: any[] = [];
+  searchText: string = '';
 
   currentPage = 0;
   itemsPerPage = 20;
   totalItems = 0;
+
+  fileLoaded: boolean = false;
+  selectedOptionKey: any = null;
+  showProgressBar: boolean = false;
+  progressValue: number = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('fileInput') fileInput: ElementRef;
 
   constructor(private bulkImportsService: BulkImportsService) { }
 
-  
+
   ngOnInit(): void {
   }
  
@@ -84,6 +96,8 @@ readCSV(file: File) {
 
     this.totalItems = this.csvData.length;
 
+    this.displayedData = [...this.csvData]; 
+
     this.updateDisplayedData();
   };
   reader.readAsText(file);
@@ -95,5 +109,35 @@ readCSV(file: File) {
     this.displayedData = this.csvData.slice(startIndex, endIndex);
   }
   
+  applyFilter() {
+    const filterValue = this.searchText.toLowerCase();
+    this.displayedData = this.csvData.filter((item) => {
+      return Object.values(item).some((value) =>
+        value.toString().toLowerCase().includes(filterValue)
+      );
+    });
+  }
+  
+  clearSearch() {
+    this.searchText = '';
+    this.applyFilter();
+  }
+
+  onValidateClicked(selectedOptionKey: any) {
+    // Set your logic here to start a process that updates the progressValue.
+    // For example, you can use a timer to simulate progress.
+    this.showProgressBar = true;
+
+    const interval = setInterval(() => {
+      if (this.progressValue < 100) {
+        this.progressValue += 10; // Increase the progress value as needed
+      } else {
+        clearInterval(interval);
+        this.showProgressBar = false; // Hide the progress bar when the process is complete
+      }
+    }, 1000); // Adjust the interval and progress logic as needed
+  }
 }
+
+
 
