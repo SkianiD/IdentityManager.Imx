@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { ValidationResultsDialogComponent } from './validation-results-dialog.component';
+
 
 @Component({
   selector: 'ccc-progress-dialog',
@@ -10,7 +12,10 @@ export class ProgressDialogComponent implements OnInit {
 
   progressValue: number = 0;
 
-  constructor(public dialogRef: MatDialogRef<ProgressDialogComponent>) { }
+  isLoading: boolean = true;
+
+  constructor(public dialogRef: MatDialogRef<ProgressDialogComponent>,
+              private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.updateProgress();
@@ -23,13 +28,24 @@ export class ProgressDialogComponent implements OnInit {
         this.progressValue += 10; 
       } else {
         clearInterval(interval); 
+        this.isLoading = false;
+        this.openNewDialog();
       }
     }, 1000); 
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    if (!this.isLoading) {
+      this.dialogRef.close();
+    }
   }
+
+  openNewDialog(): void {
+    this.dialog.open(ValidationResultsDialogComponent, {
+      disableClose: true 
+    });
+  }
+
 
 }
 

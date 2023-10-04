@@ -16,12 +16,14 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressDialogComponent } from './progress-dialog/progress-dialog.component';
+import { ValidationResultsDialogComponent } from './progress-dialog/validation-results-dialog.component';
 
 @NgModule({
   declarations: [
     BulkImportsComponent,
     BulkImportsTileComponent,
-    ProgressDialogComponent
+    ProgressDialogComponent,
+    ValidationResultsDialogComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { ProgressDialogComponent } from './progress-dialog/progress-dialog.compo
   exports: [
     BulkImportsComponent,
     BulkImportsTileComponent,
-    ProgressDialogComponent
+    ProgressDialogComponent,
+    ValidationResultsDialogComponent
   ]
 })
 export class BulkImportsModule { }
