@@ -15,11 +15,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ProgressDialogComponent } from './progress-dialog/progress-dialog.component';
 
 @NgModule({
   declarations: [
     BulkImportsComponent,
-    BulkImportsTileComponent
+    BulkImportsTileComponent,
+    ProgressDialogComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +42,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   ],
   exports: [
     BulkImportsComponent,
-    BulkImportsTileComponent
+    BulkImportsTileComponent,
+    ProgressDialogComponent
   ]
 })
 export class BulkImportsModule { }

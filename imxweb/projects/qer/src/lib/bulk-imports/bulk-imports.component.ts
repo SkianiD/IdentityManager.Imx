@@ -4,12 +4,8 @@ import { BulkImportsService } from './bulk-imports.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
-
-
-export interface DialogText {
-  message: string;
-}
-
+import { ProgressDialogComponent } from './progress-dialog/progress-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'ccc-bulk-imports',
@@ -36,8 +32,8 @@ export class BulkImportsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('fileInput') fileInput: ElementRef;
 
-  constructor(private bulkImportsService: BulkImportsService) { }
-
+  constructor(private bulkImportsService: BulkImportsService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -123,21 +119,15 @@ readCSV(file: File) {
     this.applyFilter();
   }
 
-  onValidateClicked(selectedOptionKey: any) {
-    // Set your logic here to start a process that updates the progressValue.
-    // For example, you can use a timer to simulate progress.
-    this.showProgressBar = true;
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ProgressDialogComponent, {
+      disableClose: true 
+    });
+  
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
+  
 
-    const interval = setInterval(() => {
-      if (this.progressValue < 100) {
-        this.progressValue += 10; // Increase the progress value as needed
-      } else {
-        clearInterval(interval);
-        this.showProgressBar = false; // Hide the progress bar when the process is complete
-      }
-    }, 1000); // Adjust the interval and progress logic as needed
   }
 }
-
-
-

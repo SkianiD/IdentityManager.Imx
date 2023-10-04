@@ -21,26 +21,6 @@
 
 </div>
 
-
-
-
-<div class="button-container">
-  <div class="button-bar">
-    <button
-        mat-raised-button
-        color="primary" (click)="onValidateClicked(selectedOptionKey)"
-      >
-      <!--[disabled]="!fileLoaded || selectedOptionKey === null"
-      (click)="onValidateClicked(selectedOptionKey)"-->
-        Validate
-    </button>
-  </div>
-
-  <mat-progress-bar *ngIf="showProgressBar" mode="determinate" [value]="progressValue"></mat-progress-bar>
-</div>
-
-
-
 <div class="imx-main-container">
   <div *ngIf="csvData.length === 0" id="dropZone" (dragover)="onDragOver($event)" (drop)="onDrop($event)" class="imx-no-data">
       <eui-icon icon="table"></eui-icon>
@@ -65,3 +45,31 @@
       <mat-paginator  [pageSize]="itemsPerPage" [pageSizeOptions]="[20, 50, 100]" [length]="totalItems" (page)="onPageChange($event)"></mat-paginator>
   </div>
 </div>
+
+<div class="button-bar">
+  <button
+      mat-raised-button
+      color="accent"
+    >
+    <!--[disabled]="!fileLoaded"
+    (click)="replaceCsv()"-->
+      Remove CSV
+  </button>
+  <button
+      mat-raised-button
+      color="warn" (click)="openDialog()"
+    >
+    <!--[disabled]="!fileLoaded || selectedOptionKey === null"
+    (click)="onValidateClicked(selectedOptionKey)"-->
+      Validate
+  </button>
+  <button
+      mat-raised-button
+      color="primary"
+    >
+    <!--[disabled]="!allRowsValidated || validating || initializing || !fileLoaded"
+    (click)="importToDatabase(selectedOptionKey)"-->
+      Import to database
+  </button>
+</div>
+
