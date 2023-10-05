@@ -29,6 +29,7 @@ export class ProgressDialogComponent implements OnInit {
       } else {
         clearInterval(interval); 
         this.isLoading = false;
+        this.dialogRef.close();
         this.openNewDialog();
       }
     }, 1000); 
