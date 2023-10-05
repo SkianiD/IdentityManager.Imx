@@ -12,3 +12,16 @@
   max-height: 150px;
   max-width: 800px;
 }
+
+.dialog_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.dialog_content h2 {
+  margin-left: 10px; 
+}
