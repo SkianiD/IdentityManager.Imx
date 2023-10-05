@@ -1,0 +1,182 @@
+@import '~@elemental-ui/core/src/styles/_palette.scss';
+@import 'variables.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 100%;
+}
+
+th.mat-header-cell {
+  min-width: 100px;
+  position: sticky;
+  top: 0;
+  background-color: $white;
+  z-index: 1;
+}
+
+td.mat-cell {
+  min-width: 100px;
+}
+
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-window {
+  height: 420px;
+  background-color: $white;
+}
+
+.preview-window:hover {
+  background-color: $asher-gray;
+}
+
+.scrollable-table {
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 420px;
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Adjust as necessary */
+
+  .eui-icon {
+    font-size: 100px;
+    color: rgba($black-c, 0.55);
+  }
+
+  p {
+    margin: 0;
+    font-size: 18px;
+    color: $black-9;
+  }
+
+}
+
+.button-bar {
+  display: flex;
+  justify-content: flex-end;
+  border-top: $black-c 1px solid;
+  flex-wrap: wrap;
+
+  > * {
+    margin-left: 10px;
+    margin-top: 20px;
+  }
+}
+
+.validation-result {
+  display: block;
+}
+
+.error {
+  color: red;
+}
+
+
+.imx-helper-alert {
+  display: block;
+  margin-bottom: 1em;
+}
+
+
+.search-width {
+  width: 100%;
+}
+
+.matff {
+  display: flex;
+}
+
+:host .mat-form-field {
+  font-size: 0.8rem;
+}
+
+:host .mat-form-field .mat-form-field-wrapper {
+  padding-bottom: 0.25em;
+}
+
+:host .mat-form-field .mat-form-field-flex {
+  padding: 0.5em 0em;
+}
+
+:host .mat-form-field .mat-form-field-infix {
+  padding: 0.25em 0em;
+}
+
+:host ::ng-deep .mat-form-field {
+  font-size: 0.8rem;
+}
+
+.error-row {
+  background-color: #ffe5e5 /* light red */
+}
+
+
+.loading-container {
+
+  background-color: rgba(0, 0, 0, 0.3); /* Dark background for the whole page */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.loading-wrapper {
+  background-color: white;
+  border-radius: 5px;
+  width: 600px;
+  height: 300px;
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.mat-progress-bar {
+  height: 20;
+  max-width: 500px;
+  margin-top: 10px;
+}
+
+.mat-spinner {
+  margin-top: auto;
+  margin-bottom: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1%
+}
+.flex-container > div:first-child {
+  width: 79%;
+}
+.flex-container > div:last-child {
+  width: 20%;
+}
+
+
+.WarningForBrowser {
+  color: red;
+}
+
