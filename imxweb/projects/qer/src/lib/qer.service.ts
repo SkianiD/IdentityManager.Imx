@@ -36,6 +36,7 @@ import { DuplicateCheckComponent } from './shopping-cart-validation-detail/dupli
 // tslint:disable-next-line: max-line-length
 import { ProductDependencyCheckComponent } from './shopping-cart-validation-detail/product-dependency-check/product-dependency-check.component';
 import { ObjectSheetService } from './object-sheet/object-sheet.service';
+import { BulkImportsTileComponent } from './bulk-imports/bulk-imports-tile/bulk-imports-tile.component';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,7 @@ export class QerService {
   public init(): void {
 
     this.extService.register('QBM_ops_ObjectOverview_Actions', { instance: ObjectOverviewPersonComponent });
+    this.extService.register('DashboardMediumTile_BulkImports_BulkImportsTile', { instance: BulkImportsTileComponent });
 
     this.objectsheetService.register('Person', ObjectsheetPersonComponent);
 
