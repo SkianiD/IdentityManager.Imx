@@ -61,8 +61,12 @@ import { TilesModule } from './tiles/tiles.module';
 import { UserModule } from './user/user.module';
 import { ShoppingCartValidationDetailModule } from './shopping-cart-validation-detail/shopping-cart-validation-detail.module';
 import { RoleMembershipsModule } from './role-management/role-memberships/role-memberships.module';
-import { BulkImportsModule } from './bulk-imports/bulk-imports.module';
-import { BulkImportsComponent } from './bulk-imports/bulk-imports.component';
+import { CsvsyncComponent } from './csvsync/csvsync.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { ConfirmDialogComponent } from './csvsync/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 export function initConfig(config: QerService): () => Promise<any> {
   return () =>
@@ -82,11 +86,12 @@ const routes: Routes = [
     resolve: [RouteGuardService],
   },
   {
-    path: 'bulkimports',
-    component: BulkImportsComponent,
+
+    path: 'csvsync-component',
+    component: CsvsyncComponent,
     canActivate: [RouteGuardService],
     resolve: [RouteGuardService],
-  }
+  },
 ];
 
 // @dynamic
@@ -94,8 +99,14 @@ const routes: Routes = [
   declarations: [
     StartComponent,
     BusinessOwnerChartSummaryComponent,
+    CsvsyncComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
     CommonModule,
     RouterModule.forChild(routes),
     QbmModule,
