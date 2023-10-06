@@ -29,14 +29,20 @@ export class BulkImportsComponent implements OnInit {
   showProgressBar: boolean = false;
   progressValue: number = 0;
 
+  isButtonEnabled = false;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('fileInput') fileInput: ElementRef;
 
   constructor(private bulkImportsService: BulkImportsService,
               public dialog: MatDialog) { }
 
-  ngOnInit(): void {
-  }
+ngOnInit(): void {
+  this.bulkImportsService.isButtonEnabled$.subscribe((isEnabled) => {
+    console.log('Button state changed:', isEnabled);
+    this.isButtonEnabled = isEnabled;
+  });
+}
  
  onFileSelected(event: any) {
   const file: File = event.target.files[0];

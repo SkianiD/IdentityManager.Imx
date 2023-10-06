@@ -66,6 +66,7 @@
   <button
       mat-raised-button
       color="primary"
+      [disabled]="!isButtonEnabled"
     >
     <!--[disabled]="!allRowsValidated || validating || initializing || !fileLoaded"
     (click)="importToDatabase(selectedOptionKey)"-->
