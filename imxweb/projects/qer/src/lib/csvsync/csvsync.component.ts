@@ -548,7 +548,7 @@ public async validate(endpoint: string): Promise<void> {
     // Skip the "Index" column and start from 1
     for (let colIndex = 1; colIndex < csvRow.length; colIndex++) {
       const header = this.headers[colIndex]; // Use the header name as the key
-      const sanitizedHeader = header.replace(/\s/g, ''); // Remove spaces from the header
+      const sanitizedHeader = header.replace(/\s/g, '_'); // Replace spaces with underscores in the header
       sanitizedHeaders.push(sanitizedHeader);
       rowToValidate[sanitizedHeader] = csvRow[colIndex];
     }
@@ -577,7 +577,7 @@ public async validate(endpoint: string): Promise<void> {
       // Iterate over the headers and validate responses
       for (let colIndex = 1; colIndex < this.headers.length; colIndex++) {
         const header = this.headers[colIndex];
-        const sanitizedHeader = header.replace(/\s/g, ''); // Remove spaces from the header
+        const sanitizedHeader = header.replace(/\s/g, '_'); // Replace spaces with underscores in the header
         if (validationResponse[sanitizedHeader] && validationResponse[sanitizedHeader] !== "ok") {
           this.validationResults.push({ rowIndex, colIndex, message: validationResponse[sanitizedHeader] });
           this.allvalidated = false;
@@ -617,11 +617,7 @@ public async validate(endpoint: string): Promise<void> {
 }
 
 
-public async val(endpoint: string, rowToValidate: any): Promise<object> {
-  const val = await this.config.apiClient.processRequest(this.validateRow(endpoint, rowToValidate));
-  console.log(val);
-  return val;
- }
+
 
 private validateRow(endpoint: string, rowToValidate: any): MethodDescriptor<ValidationElement> {
   return {
