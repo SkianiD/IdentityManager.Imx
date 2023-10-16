@@ -17,6 +17,7 @@ export interface ValidationElement{
   message: string;
 }
 
+
 export interface PreValidationElement{
   message: string;
   permission: boolean;
@@ -25,7 +26,6 @@ export interface PreValidationElement{
 interface StartValidationResponse {
   permission?: boolean;
 }
-
 
 
 
@@ -545,7 +545,6 @@ public async onValidateClicked(endpoint: string, columnMapping: any): Promise<vo
   this.shouldValidate = true;
   this.dialogHide = false;
   this.startValidateObj = this.startValidate(endpoint, { totalRows: this.totalRows });
-
 }
 
 
@@ -656,11 +655,14 @@ private validateRow(endpoint: string, rowToValidate: any): MethodDescriptor<Vali
 }
 
 
+
 public async startValidate(endpoint: string, startobject: any): Promise<object> {
   const msg = await this.config.apiClient.processRequest(this.startValidateMethod(endpoint, startobject));
+
   console.log(msg);
 
     // Open the validation dialog
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: msg,
     });
@@ -682,8 +684,10 @@ public async startValidate(endpoint: string, startobject: any): Promise<object> 
         // Code for the OK button
       }
     });
+
     dialogRef.componentInstance.progress = this.progress;
     
+
   console.log(msg);
   console.log(msg.permission);
   this.dialogHide = false;
@@ -711,7 +715,6 @@ public async startValidate(endpoint: string, startobject: any): Promise<object> 
     responseType: 'json'
   };
 }
-
 
 
 private countObjectsWithFunctionKey(data: any): number {

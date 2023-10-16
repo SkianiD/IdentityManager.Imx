@@ -86,6 +86,7 @@
     </button>
     <button
         mat-raised-button
+
         [disabled]="!fileLoaded || selectedOptionKey === null || loadingValidation || loadingImport"
         color="accent"
         (click)="onValidateClicked(selectedOptionKey)"
