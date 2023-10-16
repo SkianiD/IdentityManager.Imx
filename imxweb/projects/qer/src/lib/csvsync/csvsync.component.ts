@@ -22,6 +22,11 @@ export interface PreValidationElement{
   permission: boolean;
 }
 
+interface StartValidationResponse {
+  permission?: boolean;
+}
+
+
 
 
 @Component({
@@ -30,7 +35,7 @@ export interface PreValidationElement{
   styleUrls: ['./csvsync.component.scss']
 })
 export class CsvsyncComponent implements OnInit, AfterViewInit {
-
+  @ViewChild(ConfirmDialogComponent) confirmDialog: ConfirmDialogComponent;
 
   startValidateObj: any;
   preValidateMsg: object = {message:'', permission: false};
@@ -536,12 +541,14 @@ private async validateNoDuplicates(columnMapping: any): Promise<void> {
 }
 
 
-public async onValidateClicked(endpoint: string): Promise<void> {
+public async onValidateClicked(endpoint: string, columnMapping: any): Promise<void> {
   this.shouldValidate = true;
   this.dialogHide = false;
   this.startValidateObj = this.startValidate(endpoint, { totalRows: this.totalRows });
 
 }
+
+
 
 public async validate(endpoint: string, columnMapping: any): Promise<void> {
 
@@ -607,7 +614,7 @@ public async validate(endpoint: string, columnMapping: any): Promise<void> {
       this.progress = (this.processedRows / this.totalRows) * 100;
       this.estimatedRemainingTime = this.formatTime(estimatedRemainingSecs);
       this.processedRows++;
-
+      
     }
   }
 
@@ -651,23 +658,38 @@ private validateRow(endpoint: string, rowToValidate: any): MethodDescriptor<Vali
 
 public async startValidate(endpoint: string, startobject: any): Promise<object> {
   const msg = await this.config.apiClient.processRequest(this.startValidateMethod(endpoint, startobject));
-
+  console.log(msg);
 
     // Open the validation dialog
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: msg,
     });
+
+    if (msg.permission) {
+      console.log('Validation permission granted. Proceed with validation.');
+  
+      // Fetch the mapping from the API
+      const mapping = await this.mapping(endpoint);
+  
+      // Call the validate function 
+      await this.validate(endpoint, mapping);
+    } else {
+      console.log('Validation permission denied.');
+    }
   
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'ok' && msg.permission) {
-        // Handle the "OK" button click here
+        // Code for the OK button
       }
     });
-
+    dialogRef.componentInstance.progress = this.progress;
+    
   console.log(msg);
   console.log(msg.permission);
   this.dialogHide = false;
   return msg;
+
+  
  }
 
  private startValidateMethod(endpoint: string, startobject: any): MethodDescriptor<PreValidationElement> {

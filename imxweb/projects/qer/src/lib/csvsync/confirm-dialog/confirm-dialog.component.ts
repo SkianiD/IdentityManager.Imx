@@ -2,6 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef  } from '@angular/material/dialog';
 import { CsvsyncComponent } from '../csvsync.component';
 import { ViewChild } from '@angular/core';
+import { Input } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -10,34 +13,27 @@ import { ViewChild } from '@angular/core';
   styleUrls: ['./confirm-dialog.component.scss']
 })
 export class ConfirmDialogComponent implements OnInit {
-  @ViewChild(CsvsyncComponent,{ static: false }) CsvsyncComponent: CsvsyncComponent;
-  progressValue: number = 0;
+  @ViewChild(CsvsyncComponent, { static: false }) CsvsyncComponent: CsvsyncComponent;
+  progress: number = 0;
 
 
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public msg: any,
-    private dialogRef: MatDialogRef<ConfirmDialogComponent>
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
   ngOnInit(): void {
-    this.updateProgress();
+
   }
-
-  updateProgress() {
-
-    const interval = setInterval(() => {
-      if (this.progressValue < 100) {
-        this.progressValue += 10; 
-      } else {
-        clearInterval(interval); 
-      }
-    }, 1000); 
+   
+  updateProgress(progress: number) {
+    this.progress = progress;
+    this.cdr.detectChanges(); // Trigger change detection
   }
-
-    
 
   onOkClick(): void {
     this.dialogRef.close(true);
@@ -46,4 +42,5 @@ export class ConfirmDialogComponent implements OnInit {
   onCancelClick(): void {
     this.dialogRef.close(false);
   }
+
 }

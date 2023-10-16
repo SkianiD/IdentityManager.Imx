@@ -3,8 +3,9 @@
   {{ msg.message }}
 </div>
 <div *ngIf="msg.permission">
-    <div class="loading-wrapper">
-  <mat-progress-bar mode="determinate" [value]="progressValue" ></mat-progress-bar>
+    <div class="loading-wrapper"  >
+      <mat-progress-bar mode="determinate" [value]="progress" ></mat-progress-bar> 
+
     </div>
 </div>
 <div mat-dialog-actions>
