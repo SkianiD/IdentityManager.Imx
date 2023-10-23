@@ -68,6 +68,7 @@ import { MatTableModule } from '@angular/material/table';
 import { ConfirmDialogComponent } from './csvsync/confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
+
 export function initConfig(config: QerService): () => Promise<any> {
   return () =>
     new Promise<any>(async (resolve: any) => {

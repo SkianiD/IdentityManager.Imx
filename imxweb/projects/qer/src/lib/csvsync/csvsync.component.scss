@@ -120,7 +120,9 @@ td.mat-cell {
   background-color: #ffe5e5 /* light red */
 }
 
+
 .loading-container {
+
   background-color: rgba(0, 0, 0, 0.3); /* Dark background for the whole page */
   position: fixed;
   top: 0;
@@ -133,6 +135,7 @@ td.mat-cell {
   align-items: center;
 }
 
+
 .loading-wrapper {
   background-color: white;
   border-radius: 5px;
@@ -143,6 +146,7 @@ td.mat-cell {
   justify-content: center;
   align-items: center;
 }
+
 
 
 .mat-progress-bar {
@@ -158,6 +162,7 @@ td.mat-cell {
   height: 40px;
 }
 
+
 .flex-container {
   display: flex;
   justify-content: space-between;
@@ -170,6 +175,8 @@ td.mat-cell {
   width: 20%;
 }
 
+
 .WarningForBrowser {
   color: red;
 }
+
