@@ -329,21 +329,24 @@ getValidationResult(rowIndex: number, colIndex: number): string | undefined {
     const results: PeriodicElement[] = [];
     this.validating = true;
 
-    // Get the mapping object from the mapping function
-    const mappingObject = await this.mapping(endpoint);
     let totalTimeTaken = 0; // Total time taken for processing rows
     let estimatedRemainingSecs = 0;
+
+    // Create an array of sanitized headers
+    const sanitizedHeaders = this.headers.map(header => header.replace(/\s/g, '_'));
+
     for (const csvRow of csvData) {
       const inputParameterName: any = {};
 
-      for (const csvColumn in mappingObject) {
-        const dbColumn = mappingObject[csvColumn];
-        const cleanCellValue = typeof csvRow[csvColumn] === 'string'
-          ? csvRow[csvColumn].replace(/[\r\n]+/g, '').trim()
-          : csvRow[csvColumn];
+      // Iterate over the sanitized headers to set the keys in the inputParameter object
+      sanitizedHeaders.forEach((sanitizedHeader, index) => {
+        const cleanCellValue =
+          typeof csvRow[index] === 'string'
+            ? csvRow[index].replace(/[\r\n]+/g, '').trim()
+            : csvRow[index];
 
-        inputParameterName[dbColumn] = cleanCellValue;
-      }
+        inputParameterName[sanitizedHeader] = cleanCellValue;
+      });
 
       inputParameters.push(inputParameterName);
     }
@@ -357,8 +360,6 @@ getValidationResult(rowIndex: number, colIndex: number): string | undefined {
       } catch (error) {
         console.error(`Error submitting CSV data: ${error}`);
       } finally {
-
-
         const endTime = performance.now();
         const timeTaken = endTime - startTime;
         totalTimeTaken += timeTaken;
@@ -385,6 +386,8 @@ getValidationResult(rowIndex: number, colIndex: number): string | undefined {
 
     return results;
   }
+
+
 
 private PostObject(endpoint: string, inputParameterName: any): MethodDescriptor<PeriodicElement> {
   return {
