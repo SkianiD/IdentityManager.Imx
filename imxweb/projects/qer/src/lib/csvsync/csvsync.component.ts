@@ -12,6 +12,7 @@ import { Papa } from 'ngx-papaparse';
 import { CsvsyncService } from './csvsync.service';
 
 
+
 export interface PeriodicElement {
   permission: boolean;
   message: string;
@@ -163,21 +164,6 @@ export class CsvsyncComponent implements OnInit, AfterViewInit {
     this.numberOfErrors = 0;
   }
 
-  dialogClose() {
-
-    if (this.processing){
-      this.cancelAction = true;
-      this.cancelCheck = true;
-
-    }else{
-      this.cancelCheck = false;
-
-    }
-    this.importError = false;
-    this.importErrorMsg = '';
-    this.hardError = '';
-    this.dialogHide = true;
-  }
 
   removeCsv() {
     this.cancelAction = false;
@@ -812,7 +798,30 @@ public async getStartValidateData(endpoint: string, startobject: any): Promise<o
   if (msg.permission === true) {
     this.beginValidation(endpoint);
   }
-  this.dialogHide = false;
+  const dialogData = {
+    preActionMsg: this.preActionMsg,
+    numberOfErrors: this.numberOfErrors,
+    loadingValidation: this.loadingValidation,
+    loadingImport: this.loadingImport,
+    validateDialog: this.validateDialog,
+    fileLoaded: this.fileLoaded,
+    allRowsValidated: this.allRowsValidated,
+    processing: this.processing,
+    initializing: this.initializing,
+    hardError: this.hardError,
+    allImported: this.allImported,
+    importError: this.importError,
+    estimatedRemainingTime: this.estimatedRemainingTime,
+    processedRows: this.processedRows,
+    totalRows: this.totalRows,
+
+  };
+
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    data: dialogData,
+    width: '650px',
+  });
+
   return msg;
 }
 
@@ -881,7 +890,7 @@ public async getAERoleforCsvImporter(): Promise<void> {
   };
 }
 
-
+/*
 openConfirmationDialog(): void {
   const selectedOptionValue = this.getObjectValues(this.configParams).find(
     (value) => this.getReversedKey(value) === this.selectedOptionKey
@@ -902,7 +911,7 @@ openConfirmationDialog(): void {
       this.importToDatabase(result.selectedOptionKey);
     }
   });
-}
+}*/
 
 }
 
