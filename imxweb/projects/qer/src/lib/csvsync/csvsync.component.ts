@@ -6,9 +6,11 @@ import { MethodDescriptor, TimeZoneInfo } from 'imx-qbm-dbts';
 import { AppConfigService, AuthenticationService, MenuService  } from 'qbm';
 import { BehaviorSubject } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { Papa } from 'ngx-papaparse';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { CsvsyncService } from './csvsync.service';
+
 
 
 export interface PeriodicElement {
@@ -95,7 +97,9 @@ export class CsvsyncComponent implements OnInit, AfterViewInit {
     private readonly authentication: AuthenticationService,
     private qerService: QerService,
     private cdr: ChangeDetectorRef,
-    private papa: Papa) {
+    private papa: Papa,
+    private csvsyncService: CsvsyncService,
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>) {
       this.ConfigurationParameters().then((configParams) => {
         if (configParams) {
           this.configParams = this.convertObjectValuesToStrings(configParams);
@@ -111,7 +115,9 @@ export class CsvsyncComponent implements OnInit, AfterViewInit {
     this.selectedOptionKey = null;
     this.numberOfErrors = 0;
     this.loadingValidation = false;
+    this.csvsyncService.setloadingValidation(false);
     this.loadingImport = false;
+    this.csvsyncService.setloadingImport(false);
 
     this.processing = true;
 
@@ -158,22 +164,6 @@ export class CsvsyncComponent implements OnInit, AfterViewInit {
     this.initializing = false;
     this.shouldValidate = false;
     this.numberOfErrors = 0;
-  }
-
-  dialogClose() {
-
-    if (this.processing){
-      this.cancelAction = true;
-      this.cancelCheck = true;
-
-    }else{
-      this.cancelCheck = false;
-
-    }
-    this.importError = false;
-    this.importErrorMsg = '';
-    this.hardError = '';
-    this.dialogHide = true;
   }
 
   removeCsv() {
@@ -373,6 +363,7 @@ export class CsvsyncComponent implements OnInit, AfterViewInit {
             this.csvData = result.data.map((row, index) => [index + 1, ...Object.values(row)]);
             this.csvDataSource.data = this.csvData;
             this.fileLoaded = true;
+            this.csvsyncService.setfileLoaded(true);
             this.totalRows = result.data.length;
 
             // Clear the value of the file input field
@@ -414,11 +405,13 @@ getValidationResult(rowIndex: number, colIndex: number): string | undefined {
 
   public async importToDatabase(endpoint: string): Promise<PeriodicElement[]> {
     this.loadingImport = true;
+    this.csvsyncService.setloadingImport(true);
     const inputParameters: any[] = [];
     const csvData = this.csvDataSource.data;
     const results: PeriodicElement[] = [];
 
     this.processing = true;
+    this.csvsyncService.setprocessing(true);
 
     let totalTimeTaken = 0; // Total time taken for processing rows
     let estimatedRemainingSecs = 0;
@@ -458,7 +451,9 @@ getValidationResult(rowIndex: number, colIndex: number): string | undefined {
         }
         if (!data.permission) {
           this.importError = true;
+          this.csvsyncService.setimportError(true);
           this.importErrorMsg = data.message;
+          this.csvsyncService.setimportErrorMsg(data.message);
           break;
         }
 
@@ -481,18 +476,27 @@ getValidationResult(rowIndex: number, colIndex: number): string | undefined {
         this.progress = (this.processedRows / this.totalRows) * 100;
         this.estimatedRemainingTime = this.formatTime(estimatedRemainingSecs);
         this.processedRows++;
+
+        this.csvsyncService.setEstimatedRemainingTime(this.estimatedRemainingTime);
+        this.csvsyncService.setProcessedRows(this.processedRows);
+        this.csvsyncService.settotalRows(this.totalRows);
+        this.csvsyncService.setprogress(this.progress);
       }
     }
 
     this.allRowsValidated = false;
+    this.csvsyncService.setallRowsValidated(false); 
 
     this.allImported = true;
+    this.csvsyncService.setallImported(true); 
     this.processing = false;
+    this.csvsyncService.setprocessing(false);
 
 
     setTimeout(() => {
 
       this.loadingImport = false;
+      this.csvsyncService.setloadingImport(false);
       this.progress = 0;
       this.processedRows = 0;
       this.estimatedRemainingTime = null;
@@ -621,6 +625,7 @@ private async validateNoDuplicates(columnMapping: any): Promise<void> {
         });
         this.allvalidated = false;
         this.numberOfErrors++;
+        this.csvsyncService.setnumberOfErrors(this.numberOfErrors);
       } else {
         columnToUniqueValues[columnName].push(columnValue);
       }
@@ -632,6 +637,7 @@ private async validateNoDuplicates(columnMapping: any): Promise<void> {
 public async onValidate(endpoint: string): Promise<void> {
 
   this.allRowsValidated = false;
+  this.csvsyncService.setallRowsValidated(false); 
 
   this.shouldValidate = true;
   this.preValidateDialog = true;
@@ -650,7 +656,9 @@ public async beginValidation(endpoint: string): Promise<void> {
   this.shouldValidate = true;
   await this.validate(endpoint);
   this.allRowsValidated = this.checkAllRowsValidated(); // Call the new method after validation
+  this.csvsyncService.setallRowsValidated(this.checkAllRowsValidated()); 
   this.validateDialog = true;
+  this.csvsyncService.setvalidateDialog(true);
 }
 
 public async beginImport(endpoint: string): Promise<void> {
@@ -663,13 +671,16 @@ public async beginImport(endpoint: string): Promise<void> {
 public async validate(endpoint: string): Promise<void> {
 
   this.processing = true;
+  this.csvsyncService.setprocessing(true);
   this.allImported = false;
+  this.csvsyncService.setallImported(false); 
 
   this.loadingValidation = true;
+  this.csvsyncService.setloadingValidation(true);
   if(this.initializing || !this.shouldValidate) {
     setTimeout(() => {
       this.loadingValidation = false;
-
+      this.csvsyncService.setloadingValidation(false);
     });
     return;
   }
@@ -677,7 +688,9 @@ public async validate(endpoint: string): Promise<void> {
   this.allvalidated = true;
 
   this.numberOfErrors = 0; // Reset the error count before new validation
+  this.csvsyncService.setnumberOfErrors(0);
   this.hardError = '';
+  this.csvsyncService.sethardError(''); 
 
   let totalTimeTaken = 0; // Total time taken for processing rows
   let estimatedRemainingSecs = 0;
@@ -721,6 +734,7 @@ public async validate(endpoint: string): Promise<void> {
         if (column === "HardError") {
           // Handle hard errors
           this.hardError = value;
+          this.csvsyncService.sethardError(value); 
           // You can add additional logic here if needed
         } else {
           // Handle validation results
@@ -731,6 +745,7 @@ public async validate(endpoint: string): Promise<void> {
               this.validationResults.push({ rowIndex, colIndex, message: value });
               this.allvalidated = false;
               this.numberOfErrors++;
+              this.csvsyncService.setnumberOfErrors(this.numberOfErrors);
             }
           }
         }
@@ -754,17 +769,24 @@ public async validate(endpoint: string): Promise<void> {
       this.progress = (this.processedRows / this.totalRows) * 100;
       this.estimatedRemainingTime = this.formatTime(estimatedRemainingSecs);
       this.processedRows++;
+
+      this.csvsyncService.setEstimatedRemainingTime(this.estimatedRemainingTime);
+      this.csvsyncService.setProcessedRows(this.processedRows);
+      this.csvsyncService.settotalRows(this.totalRows);
+      this.csvsyncService.setprogress(this.progress);
     }
   }
 
   this.cancelAction = false;
   this.processing = false;
+  this.csvsyncService.setprocessing(false);
 
   console.log(this.allvalidated);
   this.csvDataSource.paginator._changePageSize(this.totalRows);
   this.cdr.detectChanges();
   setTimeout(() => {
     this.loadingValidation = false;
+    this.csvsyncService.setloadingValidation(false);
     this.progress = 0;
     this.processedRows = 0;
     this.estimatedRemainingTime = null;
@@ -810,6 +832,40 @@ public async getStartValidateData(endpoint: string, startobject: any): Promise<o
     this.beginValidation(endpoint);
   }
   this.dialogHide = false;
+  const dialogData = {
+    preActionMsg: this.preActionMsg,
+    numberOfErrors: this.numberOfErrors,
+    loadingValidation: this.loadingValidation,
+    loadingImport: this.loadingImport,
+    validateDialog: this.validateDialog,
+    fileLoaded: this.fileLoaded,
+    allRowsValidated: this.allRowsValidated,
+    processing: this.processing,
+    initializing: this.initializing,
+    hardError: this.hardError,
+    allImported: this.allImported,
+    importError: this.importError,
+    estimatedRemainingTime: this.estimatedRemainingTime,
+    processedRows: this.processedRows,
+    totalRows: this.totalRows,
+    progress: this.progress,
+    cancelAction: this.cancelAction
+  };
+
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    data: dialogData,
+    width: '650px',
+    height: '300px',
+  });
+
+  // Subscribe to dialog close event and handle any changes if needed
+  dialogRef.afterClosed().subscribe((result: any) => {
+    if (result === true) {
+      // Handle dialog confirmation logic if needed
+    } else {
+      // Handle dialog cancel or other logic
+    }
+  });
   return msg;
 }
 
@@ -820,6 +876,40 @@ public async getStartImportData(endpoint: string, startobject: any): Promise<obj
     this.beginImport(endpoint);
   }
   this.dialogHide = false;
+  const dialogData = {
+    preActionMsg: this.preActionMsg,
+    numberOfErrors: this.numberOfErrors,
+    loadingValidation: this.loadingValidation,
+    loadingImport: this.loadingImport,
+    validateDialog: this.validateDialog,
+    fileLoaded: this.fileLoaded,
+    allRowsValidated: this.allRowsValidated,
+    processing: this.processing,
+    initializing: this.initializing,
+    hardError: this.hardError,
+    allImported: this.allImported,
+    importError: this.importError,
+    estimatedRemainingTime: this.estimatedRemainingTime,
+    processedRows: this.processedRows,
+    totalRows: this.totalRows,
+    progress: this.progress,
+    cancelAction: this.cancelAction
+  };
+  
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    data: dialogData,
+    width: '650px',
+    height: '300px',
+  });
+  
+  // Subscribe to dialog close event and handle any changes if needed
+  dialogRef.afterClosed().subscribe((result: any) => {
+    if (result === true) {
+      // Handle dialog confirmation logic if needed
+    } else {
+      // Handle dialog cancel or other logic
+    }
+  });  
   return msg;
 }
 
@@ -939,30 +1029,6 @@ public async getAERoleforCsvImporter(): Promise<void> {
     responseType: 'json',
   };
 }
-
-
-openConfirmationDialog(): void {
-  const selectedOptionValue = this.getObjectValues(this.configParams).find(
-    (value) => this.getReversedKey(value) === this.selectedOptionKey
-  );
-
-  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    width: '400px',
-    data: {
-      selectedOptionKey: this.selectedOptionKey,
-      selectedOptionValue: selectedOptionValue,
-      totalRows: this.totalRows
-    }
-  });
-
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      // User confirmed, perform the import action here
-      this.importToDatabase(result.selectedOptionKey);
-    }
-  });
-}
-
 }
 
 

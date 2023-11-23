@@ -1,8 +1,53 @@
-<h1 mat-dialog-title>Confirm Action</h1>
-<div mat-dialog-content *ngIf="data.selectedOptionKey">
-  <p>Are you sure you want to insert {{ data.totalRows }} {{ data.selectedOptionValue }}?</p>
-</div>
-<div mat-dialog-actions>
-  <button mat-button color="warn" (click)="onNoClick()">Cancel</button>
-  <button mat-button color="primary" [mat-dialog-close]="true" [mat-dialog-close]="{ selectedOptionKey: data.selectedOptionKey }">Confirm</button>
+<div class="loading-container">
+  <div *ngIf="data.preActionMsg.permission">
+    <div *ngIf="data.loadingValidation || data.loadingImport || data.validateDialog" class="loading-wrapper">
+      <div *ngIf="loadingValidation || loadingImport">
+        <h2 *ngIf="loadingValidation">Validating...</h2>
+        <h2 *ngIf="data.loadingImport">Importing...</h2>
+        <p class="warning">Please do not close the browser</p>
+      </div>
+        
+      <div class="success" *ngIf="fileLoaded && allRowsValidated && !processing && !initializing && !hardError.length && numberOfErrors === 0">
+        <h1>Successfull Validation!</h1>
+        <p>You can procceed with the data import</p>
+      </div>
+      <div class="success" *ngIf="fileLoaded && allImported && !allRowsValidated && !importError">
+        <h1>Successfull Import!</h1>
+        <p>Import procedure completed</p>
+      </div>
+
+      <div class="errors" *ngIf="!processing && !initializing && numberOfErrors > 0 || hardError.length || importError ">
+        <h1>Validation Error!</h1>
+        <p *ngIf="!hardError.length && !importError">You have <span>{{numberOfErrors}}</span> errors in the Csv</p>
+        <p *ngIf="hardError.length && !importError">{{hardError}}</p>
+        <p *ngIf="!hardError.length && importError">{{importErrorMsg}}</p>
+      </div>
+      
+      <p class="validation-details">Estimated remaining time: {{ estimatedRemainingTime }} 
+        <span *ngIf="data.processing">{{processedRows}} of {{totalRows}}</span>
+        <span *ngIf="!processing && !hardError.length && !importError && numberOfErrors === 0">{{totalRows}} of {{totalRows}}</span>
+      </p>
+
+      <mat-progress-bar mode="determinate" [value]="data.processing ? progress : data.hardError.length || data.importError ? '33' : '100' "></mat-progress-bar>
+      <p *ngIf="!data.importError" class="validation-details">{{data.preActionMsg.message}}</p>
+
+      <div mat-dialog-actions class="button-wrapper">
+        <div *ngIf="data.numberOfErrors === 0 && !data.hardError.length && !data.importError">
+          <button [disabled]="!processing" mat-button color="warn" (click)="dialogClose()">Cancel</button>
+          <button [disabled]="processing" mat-button color="primary" (click)="dialogClose()">Ok</button>
+        </div>
+        <button *ngIf="data.numberOfErrors > 0 || data.hardError.length || data.importError" mat-button color="warn" (click)="dialogClose()">Cancel</button>
+      </div>   
+    </div>
+  </div>
+
+  <div *ngIf="!data.preActionMsg.permission">
+    <div class="loading-wrapper">
+      <h1 class="warning">Action not allowed</h1>
+      <p>{{data.preActionMsg.message}}<p>
+      <div mat-dialog-actions class="button-wrapper">
+        <button type="button" mat-button color="warn" (click)="dialogClose()">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>

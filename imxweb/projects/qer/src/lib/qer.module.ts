@@ -66,7 +66,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { ConfirmDialogComponent } from './csvsync/confirm-dialog/confirm-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { CsvsyncService } from './csvsync/csvsync.service';
 
 
 export function initConfig(config: QerService): () => Promise<any> {
@@ -134,6 +135,7 @@ const routes: Routes = [
     DataExplorerViewModule,
   ],
   exports: [PasscodeViewerComponent, ObjectOverviewPersonComponent],
+  entryComponents: [ConfirmDialogComponent],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -141,8 +143,13 @@ const routes: Routes = [
       deps: [QerService],
       multi: true,
     },
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
     ServiceItemsService,
-    PatternItemService
+    PatternItemService,
+    CsvsyncService
   ],
 })
 export class QerModule {

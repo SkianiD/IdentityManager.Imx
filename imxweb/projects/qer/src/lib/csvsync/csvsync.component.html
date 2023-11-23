@@ -109,63 +109,6 @@
       Import to database
     </button>
   </div>
-
-  <div *ngIf="!dialogHide" class="loading-container">
-
-    <div *ngIf="preActionMsg.permission">
-      <div *ngIf="loadingValidation || loadingImport || validateDialog" class="loading-wrapper">
-        <div *ngIf="loadingValidation || loadingImport">
-          <h2 *ngIf="loadingValidation">Validating...</h2>
-          <h2 *ngIf="loadingImport">Importing...</h2>
-          <p class="warning center">Please do not close the browser</p>
-        </div>
-          
-        <div class="success" *ngIf="fileLoaded && allRowsValidated && !processing && !initializing && !hardError.length && numberOfErrors === 0">
-          <h1>Successfull Validation!</h1>
-          <p class="center">You can procceed with the data import</p>
-        </div>
-        <div class="success" *ngIf="fileLoaded && allImported && !allRowsValidated && !importError">
-          <h1>Successfull Import!</h1>
-          <p>Import procedure completed</p>
-        </div>
-
-        <div class="errors" *ngIf="!processing && !initializing && numberOfErrors > 0 || hardError.length || importError ">
-          <h1>Validation Error!</h1>
-          <p *ngIf="!hardError.length && !importError" class="center">You have <span>{{numberOfErrors}}</span> errors in the Csv</p>
-          <p *ngIf="hardError.length && !importError" class="line-break">{{hardError}}</p>
-          <p *ngIf="!hardError.length && importError">{{importErrorMsg}}</p>
-        </div>
-        
-        <p class="validation-details">Estimated remaining time: {{ estimatedRemainingTime }} 
-          <span *ngIf="processing">{{processedRows}} of {{totalRows}}</span>
-          <span *ngIf="!processing && !hardError.length && !importError && numberOfErrors === 0">{{totalRows}} of {{totalRows}}</span>
-        </p>
-        <mat-progress-bar mode="determinate" [value]="processing ? progress : hardError.length || importError ? '33' : '100' "></mat-progress-bar>
-        <p *ngIf="!importError" class="validation-details">{{preActionMsg.message}}</p>
-
-        <div mat-dialog-actions class="button-wrapper">
-          <div *ngIf="numberOfErrors === 0 && !hardError.length && !importError">
-            <button [disabled]="!processing" mat-button color="warn" (click)="dialogClose()">Cancel</button>
-            <button [disabled]="processing" mat-button color="primary" (click)="dialogClose()">Ok</button>
-          </div>
-          <button *ngIf="numberOfErrors > 0 || hardError.length || importError" mat-button color="warn" (click)="dialogClose()">Cancel</button>
-        </div>   
-      </div>
-    </div>
-
-    <div *ngIf="!preActionMsg.permission">
-      <div class="loading-wrapper">
-        <h1 class="warning center">Action not allowed</h1>
-        <p class="center">{{preActionMsg.message}}<p>
-
-        <div mat-dialog-actions class="button-wrapper">
-          <button type="button" mat-button color="warn" (click)="dialogClose()">Cancel</button>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 
