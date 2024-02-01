@@ -94,7 +94,7 @@ export class StartComponent implements OnInit {
   }
 
   public GoToProductSelection(): void {
-    this.router.navigate(['productselection']);
+    this.router.navigate(['newrequest', 'productsByPeerGroup']);
   }
 
   public GoToItshopApprovals(): void {
